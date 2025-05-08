@@ -54,10 +54,10 @@ section {
 }
 
 .navbar {
-  position: fixed !important;
-  padding: 16px 0 !important;
+  position: fixed;
+  padding: 16px 0;
   width: 100%;
-  background: transparent!important;
+  background: transparent;
   z-index: 1099;
   top: 0;
 }
