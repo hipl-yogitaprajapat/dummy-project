@@ -1,9 +1,44 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Footer from '../Footer'
 import Sidebar from '../sidebar/Sidebar'
 import Header from '../Header'
 
 const MapVector = () => {
+    useEffect(() => {
+        const loadScript = (src) =>
+          new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+          });
+    
+        // Load scripts in order
+        async function loadAllScripts() {
+          try {
+            await loadScript('/src/assets/js/plugins/jsvectormap.min.js');
+            await loadScript('/src/assets/js/plugins/world.js');
+            await loadScript('/src/assets/js/plugins/world-merc.js');
+            await loadScript('/src/assets/js/pages/canada.js');
+            await loadScript('/src/assets/js/pages/iraq.js');
+            await loadScript('/src/assets/js/pages/italy.js');
+            await loadScript('/src/assets/js/pages/russia.js');
+            await loadScript('/src/assets/js/pages/spain.js');
+            await loadScript('/src/assets/js/pages/us-aea-en.js');
+            await loadScript('/src/assets/js/pages/us-lcc-en.js');
+            await loadScript('/src/assets/js/pages/us-merc-en.js');
+            await loadScript('/src/assets/js/pages/us-mill-en.js');
+            await loadScript('/src/assets/js/pages/map-vector.js'); // initializer
+          } catch (error) {
+            console.error('Script load error:', error);
+          }
+        }
+    
+        loadAllScripts();
+      }, []);
+      
   return (
    <>
    <Sidebar/>
