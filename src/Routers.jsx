@@ -23,6 +23,20 @@ import EcommereceProductList from './components/application/EcommereceProductLis
 import UserCard from './components/application/UserCard'
 import UserList from './components/application/UserList'
 import UserProfile from './components/application/UserProfile'
+import LayoutCompact from './components/demo/LayoutCompact'
+import LayoutHorizontal from './components/demo/LayoutHorizontal'
+import LayoutTab from './components/demo/LayoutTab'
+import LayoutVertical from './components/demo/LayoutVertical'
+import SweetAlert from './components/elements/advance/SweetAlert'
+import DatePicker from './components/elements/advance/DatePicker'
+import LightBox from './components/elements/advance/LightBox'
+import AdvanceModel from './components/elements/advance/AdvanceModel'
+import Notification from './components/elements/advance/Notification'
+import RangeSlider from './components/elements/advance/RangeSlider'
+import Slider from './components/elements/advance/Slider'
+import SyntaxHighlighter from './components/elements/advance/SyntaxHighlighter'
+import Tour from './components/elements/advance/Tour'
+import TreeView from './components/elements/advance/TreeView'
 
 const Routers = () => {
   return (
@@ -37,6 +51,7 @@ const Routers = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/samplepage" element={<SamplePage />} />
+     {/*chart routing */}
       <Route path="/chart-apex" element={<ChartApex />} />
       <Route path="/map-vector" element={<MapVector />} />
      {/* Account profile routing */}
@@ -52,6 +67,36 @@ const Routers = () => {
      <Route path="/user-card" element={<UserCard/>} />
      <Route path="/user-list" element={<UserList/>} />
      <Route path="/user-profile" element={<UserProfile/>} />
+     {/*Layout routing */}
+     <Route path="/layout-compact" element={<LayoutCompact/>} />
+     <Route path="/layout-horizontal" element={<LayoutHorizontal/>} />
+     <Route path="/layout-tab" element={<LayoutTab/>} />
+     <Route path="/layout-vertical" element={<LayoutVertical/>} />
+     {/*Elements routing */}
+     {/* Basic component */}
+    
+
+     {/* Advance component */}
+     <Route path="/sweet-alert" element={<SweetAlert/>} />
+     <Route path="/datepicker" element={<DatePicker/>} />
+     <Route path="/lightbox" element={<LightBox/>} />
+     <Route path="/advance-model" element={<AdvanceModel/>} />
+     <Route path="/notification" element={<Notification/>} />
+     <Route path="/range-slider" element={<RangeSlider/>} />
+     <Route path="/slider" element={<Slider/>} />
+     <Route path="/syntax-highlighter" element={<SyntaxHighlighter/>} />
+     <Route path="/tour" element={<Tour/>} />
+     <Route path="/tree-view" element={<TreeView/>} />
+
+
+
+
+
+
+
+
+
+
   
      </Routes>
     </>

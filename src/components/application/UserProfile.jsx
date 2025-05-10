@@ -36,9 +36,9 @@ const UserProfile = () => {
         {/* <!-- [ sample-page ] start --> */}
         <div class="col-sm-12">
           <div class="card profile-wave-card">
-            <img src="../assets/images/profile/img-profile-top.svg" alt="images"
+            <img src="../src/assets/images/profile/img-profile-top.svg" alt="images"
               class="img-fluid profille-wave-img wave-top"/>
-            <img src="../assets/images/profile/img-profile-bottom.svg" alt="images"
+            <img src="../src/assets/images/profile/img-profile-bottom.svg" alt="images"
               class="img-fluid profille-wave-img wave-bottom"/>
             <div class="card-body">
               <div class="row">
