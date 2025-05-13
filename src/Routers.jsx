@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Home from './home'
-import { Routes,Route } from 'react-router-dom'
+import { Routes,Route, Navigate } from 'react-router-dom'
 import Dashboard from './components/Dashboard'
 import Analytics from './components/Analytics'
 import Typography from './components/sidebar/Typography'
@@ -37,13 +37,22 @@ import Slider from './components/elements/advance/Slider'
 import SyntaxHighlighter from './components/elements/advance/SyntaxHighlighter'
 import Tour from './components/elements/advance/Tour'
 import TreeView from './components/elements/advance/TreeView'
+import BasicAlert from './components/elements/basic/BasicAlert'
+import ProtectedRoute from './protectedRoute'
 
 const Routers = () => {
+     const [isAuthenticated, setIsAuthenticated] = useState(false);     
+
+  const PrivateRoute = ({ element }) => {
+    return isAuthenticated ? element : <Navigate to="/login" />
+  }
+
   return (
     <>
+      <ProtectedRoute setIsAuthenticated={setIsAuthenticated} />
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard"  element={<PrivateRoute element={<Dashboard />} />}  />
       <Route path="/analytics" element={<Analytics />} />
       <Route path="/typography" element={<Typography />} />
       <Route path="/color" element={<Color />} />
@@ -87,17 +96,8 @@ const Routers = () => {
      <Route path="/syntax-highlighter" element={<SyntaxHighlighter/>} />
      <Route path="/tour" element={<Tour/>} />
      <Route path="/tree-view" element={<TreeView/>} />
-
-
-
-
-
-
-
-
-
-
-  
+      {/* Basic component */}
+     <Route path="/basic-alert" element={<BasicAlert/>} />
      </Routes>
     </>
 

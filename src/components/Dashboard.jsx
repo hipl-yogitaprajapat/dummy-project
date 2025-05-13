@@ -1,5 +1,4 @@
 import React from 'react'
-import {} from "../assets/images/user/avatar-2.jpg"
 import Sidebar from './sidebar/Sidebar'
 import Header from './Header'
 import Footer from './Footer'

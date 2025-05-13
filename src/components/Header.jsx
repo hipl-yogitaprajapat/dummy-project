@@ -1,7 +1,22 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { handleSuccess } from '../utils';
 // import {} from "../assets/images/user/avatar-2.jpg"
 
 const Header = () => {
+
+  const navigate = useNavigate();
+
+  const handleLogout=()=>{
+    console.log("hey");
+    
+    localStorage.removeItem("token");
+    localStorage.removeItem("loggedInUser");
+    handleSuccess("Loggedout successfully");
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
+  }
   return (
       <>
       <header class="pc-header" style={{ overflow: 'visible', position: 'relative', zIndex: 100 }}>
@@ -537,7 +552,7 @@ const Header = () => {
               <h6 class="mb-1">Stebin Ben</h6>
               <span>UI/UX Designer</span>
             </div>
-            <a href="#!" class="pc-head-link bg-transparent"><i class="ti ti-power text-danger"></i></a>
+            <button type="button" onClick={handleLogout} className="pc-head-link bg-transparent"><i className="ti ti-power text-danger"></i></button>
           </div>
         </div>
         <ul class="nav drp-tabs nav-fill nav-tabs" id="mydrpTab" role="tablist">

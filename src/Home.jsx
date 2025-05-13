@@ -18,8 +18,10 @@ const Home = () => {
         <div className="">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item pe-1">
-              {/* <a className="nav-link" href="../src/dashboard/index.jsx">Dashboard</a> */}
-              <Link className="nav-link" to="/dashboard">Dashboard</Link>
+              <Link className="nav-link" to="/login">Login</Link>
+            </li>
+                 <li className="nav-item pe-1">
+              <Link className="nav-link" to="/register">Register</Link>
             </li>
             <li className="nav-item">
               <a className="btn btn-primary" target="_blank" href="https://codedthemes.com/item/mantis-bootstrap-admin-dashboard/">Purchase Now</a>
