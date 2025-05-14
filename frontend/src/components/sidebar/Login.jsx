@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { handleError, handleSuccess } from '../../utils';
 import { ToastContainer } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [loginInfo,setLoginInfo]= useState({
@@ -72,7 +72,7 @@ const navigate = useNavigate();
                 <input class="form-check-input input-primary" type="checkbox" id="customCheckc1"/>
                 <label class="form-check-label text-muted" for="customCheckc1">Keep me sign in</label>
               </div>
-              <h5 class="text-secondary f-w-400">Forgot Password?</h5>
+              <Link to="/forget-password"><h5 class="text-secondary f-w-400">Forgot Password?</h5></Link>
             </div>
             <div class="d-grid mt-4">
               <button type="submit" class="btn btn-primary">Login</button>

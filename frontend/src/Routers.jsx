@@ -39,6 +39,8 @@ import Tour from './components/elements/advance/Tour'
 import TreeView from './components/elements/advance/TreeView'
 import BasicAlert from './components/elements/basic/BasicAlert'
 import ProtectedRoute from './protectedRoute'
+import ForgetPassword from './components/sidebar/ForgetPassword'
+import ChangePassword from './components/sidebar/ChangePassword'
 
 const Routers = () => {
      const [isAuthenticated, setIsAuthenticated] = useState(false);     
@@ -59,6 +61,8 @@ const Routers = () => {
       <Route path="/icons" element={<Icons />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forget-password" element={<ForgetPassword />} />
+      <Route path="/reset-password/:id/:token" element={<ChangePassword />} />
       <Route path="/samplepage" element={<SamplePage />} />
      {/*chart routing */}
       <Route path="/chart-apex" element={<ChartApex />} />
