@@ -1,49 +1,43 @@
-import { useState } from 'react'
-import {ToastContainer } from "react-toastify";
+import { useEffect, useState } from 'react'
+import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from '../../utils';
 import { useNavigate } from 'react-router-dom';
-
+import { useDispatch, useSelector } from "react-redux";
+import { clearMessages, SignupUser } from '../redux/slice/authSlice';
 
 const Register = () => {
-    const [registerInfo, setregisterInfo] = useState({
-        firstName: '',
-        lastName: '',
-        company: '',
-        email: '',
-        password: ''
-    })
+  const [registerInfo, setregisterInfo] = useState({
+    firstName: '',
+    lastName: '',
+    company: '',
+    email: '',
+    password: ''
+  })  
 
-    const navigate = useNavigate();
-   
-  const handleRegistration=async(e)=>{
-      e.preventDefault();
-        const { firstName,lastName,company, email, password } = registerInfo;
-        if(!firstName || !lastName || !company ||!email ||!password ){
-          return handleError("All fields are required")
-        }
-      try {
-        const url = "http://localhost:5001/api/auth/signup"
-        const response = await fetch(url,{
-          method: "POST",
-          headers:{
-            'Content-Type': 'application/json'
-          },
-          body:JSON.stringify(registerInfo)
-        })
-        const result = await response.json();
-        const {success,message} = result;
-        if(success){
-          handleSuccess(message); 
-          setTimeout(()=>{
-            navigate("/login");        
-          },1000)
-        }else{
-          handleError(message);          
-        }
-      } catch (error) {
-        console.log(error);
-          handleError(error);          
-      }
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const { success, error, message } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (success) {
+      handleSuccess(message);
+      dispatch(clearMessages());
+      setTimeout(() => navigate("/login"), 1000);
+    }
+
+    if (error) {
+      handleError(error);
+      dispatch(clearMessages());
+    }
+  }, [success, error, dispatch, navigate]);
+
+  const handleRegistration = async (e) => {
+    e.preventDefault();
+       const { firstName, lastName, company, email, password } = registerInfo;       
+    if (!firstName || !lastName || !company || !email || !password) {
+        return handleError("All fields are required")
+    }
+    dispatch(SignupUser(registerInfo));
   }
 
   return (
@@ -54,7 +48,7 @@ const Register = () => {
        <div class="auth-form">
       <form onSubmit={handleRegistration}>
         <div class="auth-header">
-          <a href="/dashboard"><img src="../src/assets/images/logo-dark.svg" alt="img"/></a>
+          <a href="/dashboard"><img src="../src/assets/images/logo-dark.svg" alt="img" /></a>
         </div>
         <div class="card my-5">
           <div class="card-body">
@@ -66,27 +60,27 @@ const Register = () => {
               <div class="col-md-6">
                 <div class="form-group mb-3">
                   <label class="form-label">First Name*</label>
-                  <input type="text" class="form-control" name="fname" value={registerInfo.firstName}  onChange={(e) => setregisterInfo({ ...registerInfo, firstName: e.target.value })} placeholder="First Name"/>
+                  <input type="text" class="form-control" name="fname" value={registerInfo.firstName} onChange={(e) => setregisterInfo({ ...registerInfo, firstName: e.target.value })} placeholder="First Name" />
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group mb-3">
                   <label class="form-label">Last Name</label>
-                  <input type="text" class="form-control" name="lname" value={registerInfo.lastName} onChange={(e) => setregisterInfo({ ...registerInfo, lastName: e.target.value })} placeholder="Last Name"/>
+                  <input type="text" class="form-control" name="lname" value={registerInfo.lastName} onChange={(e) => setregisterInfo({ ...registerInfo, lastName: e.target.value })} placeholder="Last Name" />
                 </div>
               </div>
             </div>
             <div class="form-group mb-3">
               <label class="form-label">Company</label>
-              <input type="text" class="form-control" name="company" value={registerInfo.company} onChange={(e) => setregisterInfo({ ...registerInfo, company: e.target.value })} placeholder="Company"/>
+              <input type="text" class="form-control" name="company" value={registerInfo.company} onChange={(e) => setregisterInfo({ ...registerInfo, company: e.target.value })} placeholder="Company" />
             </div>
             <div class="form-group mb-3">
               <label class="form-label">Email Address*</label>
-              <input type="email" class="form-control" name="email" value={registerInfo.email} onChange={(e) => setregisterInfo({ ...registerInfo, email: e.target.value })} placeholder="Email Address"/>
+              <input type="email" class="form-control" name="email" value={registerInfo.email} onChange={(e) => setregisterInfo({ ...registerInfo, email: e.target.value })} placeholder="Email Address" />
             </div>
             <div class="form-group mb-3">
               <label class="form-label">Password</label>
-              <input type="password" class="form-control" name="password" value={registerInfo.password} onChange={(e) => setregisterInfo({ ...registerInfo, password: e.target.value })} placeholder="Password"/>
+              <input type="password" class="form-control" name="password" value={registerInfo.password} onChange={(e) => setregisterInfo({ ...registerInfo, password: e.target.value })} placeholder="Password" />
             </div>
             <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#" class="text-primary"> Terms of Service </a> and <a href="#" class="text-primary"> Privacy Policy</a></p>
             <div class="d-grid mt-3">
@@ -99,26 +93,25 @@ const Register = () => {
               <div class="col-4">
                 <div class="d-grid">
                   <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="../src/assets/images/authentication/google.svg" alt="img"/> <span class="d-none d-sm-inline-block"> Google</span>
+                    <img src="../src/assets/images/authentication/google.svg" alt="img" /> <span class="d-none d-sm-inline-block"> Google</span>
                   </button>
                 </div>
               </div>
               <div class="col-4">
                 <div class="d-grid">
                   <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="../src/assets/images/authentication/twitter.svg" alt="img"/> <span class="d-none d-sm-inline-block"> Twitter</span>
+                    <img src="../src/assets/images/authentication/twitter.svg" alt="img" /> <span class="d-none d-sm-inline-block"> Twitter</span>
                   </button>
                 </div>
               </div>
               <div class="col-4">
                 <div class="d-grid">
                   <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="../src/assets/images/authentication/facebook.svg" alt="img"/> <span class="d-none d-sm-inline-block"> Facebook</span>
+                    <img src="../src/assets/images/authentication/facebook.svg" alt="img" /> <span class="d-none d-sm-inline-block"> Facebook</span>
                   </button>
                 </div>
               </div>
             </div>
-            
           </div>
         </div>
         <div class="auth-footer row">

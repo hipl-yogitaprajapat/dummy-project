@@ -8,7 +8,7 @@ router.post("/login",login)
 router.post("/signup",signup)
 router.post("/logout",logout)
 router.post("/forget-password",forgetpassword)
-router.get("reset-password/:id/:token",resetpassword)
+router.post("/reset-password/:id/:token",resetpassword)
 router.get("/check",protectRoute,checkAuth)
 
 export default router

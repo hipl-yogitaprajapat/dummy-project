@@ -1,46 +1,40 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { handleError, handleSuccess } from '../../utils';
 import { ToastContainer } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import { clearMessages, LoginUser } from '../redux/slice/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Login = () => {
   const [loginInfo,setLoginInfo]= useState({
     email:"",
     password:""
   });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { success, error, message } = useSelector((state) => state.user);
+
+    useEffect(() => {
+      if (success) {
+        handleSuccess(message);
+        dispatch(clearMessages());
+        setTimeout(() => navigate("/dashboard"), 1000);
+      }
+      if (error) {
+        handleError(error);
+        dispatch(clearMessages());
+      }
+    }, [success, error, dispatch, navigate]);
   
-const navigate = useNavigate();
   const handleLogin=async(e)=>{
     e.preventDefault();
-    const {email,password}= loginInfo
-     if(!email ||!password ){
-          return handleError("All fields are required")
-        }
-    try {
-      const url = "http://localhost:5001/api/auth/login";
-      const response = await fetch(url,{
-     method:"POST",
-     headers:{
-            'Content-Type': 'application/json'
-          },
-          body:JSON.stringify(loginInfo)
-      })
-    const result = await response.json();
-    const {success,message,jwtToken,name} = result;
-    if(success){
-      handleSuccess(message)
-      localStorage.setItem('token', jwtToken);
-      localStorage.setItem('loggedInUser', name);
-      setTimeout(()=>{
-        navigate("/dashboard")
-      },1000)
-    }else{
-      handleError(message)
+       const { email, password } = loginInfo       
+    if (!email || !password) {
+        return handleError("All fields are required")
     }
-    } catch (error) {
-      console.log(error);
-      handleError(message)
-    }
+        dispatch(LoginUser(loginInfo));
+    
   }
 
   return (

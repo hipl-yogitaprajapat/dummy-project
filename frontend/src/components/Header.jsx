@@ -1,21 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { handleSuccess } from '../utils';
+import { handleError, handleSuccess } from '../utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearMessages, LogoutUser } from './redux/slice/authSlice';
 // import {} from "../assets/images/user/avatar-2.jpg"
 
 const Header = () => {
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogout=()=>{
-    console.log("hey");
-    
-    localStorage.removeItem("token");
-    localStorage.removeItem("loggedInUser");
-    handleSuccess("Loggedout successfully");
-    setTimeout(() => {
-      navigate("/login");
-    }, 1000);
+  const { success, error, message } = useSelector((state) => state.user);
+      useEffect(() => {
+        if (success) {
+          handleSuccess(message);
+          setTimeout(() => navigate("/login"), 1000);
+        dispatch(clearMessages());
+
+        }
+        if (error) {
+          handleError(error);
+        dispatch(clearMessages());
+        }
+      }, [success, error]);
+
+  const handleLogout=()=>{     
+    dispatch(LogoutUser());
   }
   return (
       <>

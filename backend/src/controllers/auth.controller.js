@@ -97,9 +97,13 @@ export const forgetpassword = async(req, res) => {
                 const jwtToken = jwt.sign({ userId: isUser._id }, process.env.JWT_SECRET, {
                     expiresIn: "5m"
                 })
+
+                   const link = `http://localhost:5173/reset-password/${isUser._id}/${jwtToken}`;
                 
                 const transporter = nodemailer.createTransport({
                     service: "gmail",
+                     host: "smtp.gmail.com",
+                     port: 465,
                     auth: {
                         user: process.env.EMAIL,
                         pass: process.env.EMAIL_PASSWORD,
@@ -107,13 +111,14 @@ export const forgetpassword = async(req, res) => {
                 })                
 
                 const mailOptions = {
-                    from: process.env.Email,
+                    from: process.env.EMAIL,
                     to: email,
-                    html: `<h1>Reset Your Password</h1>
-                           <p>Click on the following link to reset your password:</p>
-                           <a>${jwtToken}</a>
-                           <p>The link will expire in 5 minutes.</p>
-                           <p>If you didn't request a password reset, please ignore this email.</p>`,
+                    subject: "Reset Password",
+              html: `<h1>Reset Your Password</h1>
+    <p>Click on the following link to reset your password:</p>
+ <p><a href="${link}">Reset Password</a></p>
+    <p>The link will expire in 10 minutes.</p>
+    <p>If you didn't request a password reset, please ignore this email.</p>`,
                 }
 
                 transporter.sendMail(mailOptions, (err, info) => {
@@ -138,12 +143,10 @@ export const forgetpassword = async(req, res) => {
 export const resetpassword = async (req, res) => {
     const { newPassword, confirmPassword } = req.body;
     const { id, token } = req.params;
-    console.log(req.params,"req.params");
     
     try {
         if (newPassword && confirmPassword && id && token) {
             if (newPassword === confirmPassword) {
-                const token = req.cookies.jwt;
                 const decodedToken = jwt.verify(token, process.env.JWT_SECRET)                
                 if (decodedToken) {
                 const user = await User.findById(id)
@@ -155,11 +158,11 @@ export const resetpassword = async (req, res) => {
                     }
                 })
                 if(isSuccess){
-                    return res.status(200).json({message:"Password has been changes successfully"})
+                    return res.status(200).json({message:"Password has been changes successfully",success: true })
                 }
                 }
                 else{
-                    return res.status(400).send({ message: "Link has been expired" });
+                    return res.status(400).send({ message: "Link has been expired" ,success: false });
 
                 }
 
