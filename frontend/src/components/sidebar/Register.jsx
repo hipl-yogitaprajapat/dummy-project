@@ -4,6 +4,8 @@ import { handleError, handleSuccess } from '../../utils';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { clearMessages, SignupUser } from '../redux/slice/authSlice';
+import {GoogleOAuthProvider, useGoogleLogin} from "@react-oauth/google";
+import GoogleComponent from './GoogleComponent';
 
 const Register = () => {
   const [registerInfo, setregisterInfo] = useState({
@@ -33,12 +35,10 @@ const Register = () => {
 
   const handleRegistration = async (e) => {
     e.preventDefault();
-       const { firstName, lastName, company, email, password } = registerInfo;       
-    if (!firstName || !lastName || !company || !email || !password) {
-        return handleError("All fields are required")
-    }
     dispatch(SignupUser(registerInfo));
   }
+
+
 
   return (
     <>
@@ -92,8 +92,11 @@ const Register = () => {
             <div class="row">
               <div class="col-4">
                 <div class="d-grid">
-                  <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="../src/assets/images/authentication/google.svg" alt="img" /> <span class="d-none d-sm-inline-block"> Google</span>
+                  <button type="button" onClick={""} class="btn mt-2 btn-light-primary bg-light text-muted">
+                    {/* <img src="../src/assets/images/authentication/google.svg" alt="img" /> <span class="d-none d-sm-inline-block"> Google</span> */}
+                   <GoogleOAuthProvider clientId="752032708839-0ld3ft7t6a5pks96m22v1m84hegro8i0.apps.googleusercontent.com">
+                    <GoogleComponent/>
+                    </GoogleOAuthProvider> 
                   </button>
                 </div>
               </div>

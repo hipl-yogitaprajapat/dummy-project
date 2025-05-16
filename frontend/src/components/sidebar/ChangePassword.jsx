@@ -1,49 +1,38 @@
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../../utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearMessages, ResetPasswordUser } from '../redux/slice/authSlice';
 
 const ChangePassword = () => {
   const { id, token } = useParams();
+
   const [input, setInput] = useState({
     newPassword: "",
     confirmPassword: ""
   });
-  const navigate = useNavigate()
+  const dispatch = useDispatch()
+    const navigate = useNavigate();
+  const { success, error, message } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (success) {
+      handleSuccess(message);
+      setTimeout(() => navigate("/login"), 1000);
+      dispatch(clearMessages());
+    }
+    if (error) {
+      handleError(error);
+      dispatch(clearMessages());
+    }
+  }, [success, error, message, dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = `http://localhost:5001/api/auth/reset-password/${id}/${token}`;
-      console.log(url, "url");
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(input),
-      })
-      console.log(response, "response");
-
-      const result = await response.json();
-      console.log(result, "result");
-      const { success, message } = result;
-      if (success) {
-        handleSuccess(message)
-        setTimeout(() => {
-          navigate("/login")
-        }, 1000)
-      } else {
-        handleError(message)
-      }
-
-    } catch (error) {
-      console.log(error);
-      handleError(message)
-    }
+    dispatch(ResetPasswordUser({ input, id, token }));
 
   }
 
@@ -68,7 +57,7 @@ const ChangePassword = () => {
                     <p>we will send password set-up Link to your email. Plaese check inbox.</p>
                     {/* <label class="form-label">Email Address</label> */}
                     <input type="password" class="form-control" name="newPassword" value={input.newPassword} onChange={(e) => setInput({ ...input, newPassword: e.target.value })} placeholder="Enter new password" />
-                    <br/>
+                    <br />
                     <input type="password" class="form-control" name='confirmPassword' value={input.confirmPassword} onChange={(e) => setInput({ ...input, confirmPassword: e.target.value })} placeholder="Enter confirm password" />
 
                   </div>

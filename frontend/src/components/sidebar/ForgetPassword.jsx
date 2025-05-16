@@ -1,44 +1,33 @@
-import React from 'react'
+import { useEffect } from 'react'
 import { useState } from 'react';
-import { Link} from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../../utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearMessages, ForgetPasswordUser } from '../redux/slice/authSlice';
 
 const ForgetPassword = () => {
   const [email,setEmail] = useState({
     email:""
   });
-console.log(email,"email");
+
+const dispatch = useDispatch()
+
+  const { success, error, message } = useSelector((state) => state.user);
+  
+ useEffect(() => {
+      if (success) {                
+        handleSuccess(message);
+        dispatch(clearMessages());
+      }
+      if (error) {
+        handleError(error);
+        dispatch(clearMessages());
+      }
+    }, [success, error, dispatch]);
 
   const handleSubmit=async(e)=>{
     e.preventDefault();
-    try {
-          const url = "http://localhost:5001/api/auth/forget-password";
-         const response = await fetch(url,{
-          method:"POST",
-          headers:{
-            'Content-Type': 'application/json'
-          },
-               body:JSON.stringify(email)
-    })
-    console.log(response,"response");
-    
-        const result = await response.json();
-        console.log(result,"result");
-           const {success,message} = result;
-            if(success){
-              handleSuccess(message)
-              // setTimeout(()=>{
-              //   navigate("/dashboard")
-              // },1000)
-            }else{
-              handleError(message)
-            }
-      
-    } catch (error) {
-         console.log(error);
-            handleError(message)
-    }
+       dispatch(ForgetPasswordUser(email));
 
   }
 

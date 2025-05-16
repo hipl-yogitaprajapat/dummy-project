@@ -16,7 +16,7 @@ const Login = () => {
   const { success, error, message } = useSelector((state) => state.user);
 
     useEffect(() => {
-      if (success) {
+      if (success) {        
         handleSuccess(message);
         dispatch(clearMessages());
         setTimeout(() => navigate("/dashboard"), 1000);
@@ -29,7 +29,7 @@ const Login = () => {
   
   const handleLogin=async(e)=>{
     e.preventDefault();
-       const { email, password } = loginInfo       
+    const { email, password } = loginInfo       
     if (!email || !password) {
         return handleError("All fields are required")
     }

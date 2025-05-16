@@ -3,6 +3,8 @@ import { generateToken } from "../lib/utils.js"
 import User from "../models/user.model.js"
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken"
+import { Query } from "mongoose";
+import { oauth2client } from "../lib/googleConfig.js";
 export const signup = async (req, res) => {
     const { firstName, lastName, company, email, password } = req.body;
     try {
@@ -200,4 +202,33 @@ export const logout = (req, res) => {
             res.status(500).json({ message: "Internal server error" })
 
         }
+    }
+
+    export const googleLogin = async(req,res)=>{
+    try {
+    const {code} = req.query;
+    console.log(code,"code");
+    
+    const googleRes = await oauth2client.getToken(code);
+    oauth2client.setCredentials(googleRes.tokens)
+    const userRes = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`)
+    console.log(userRes,"userRes");
+    
+    const {email,name} = userRes.data;
+    const user = await User.findOne({email});
+    if(!user){
+        user = await User.create({
+            name,
+            email
+        })
+    }
+       const {_id} = user;
+       const token = jwt.sign({_id,email }, process.env.JWT_SECRET, {
+                    expiresIn: "12h"
+                })
+   return res.status(200).json({message:"Google login successfully",success: true,user,token })
+
+} catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+}
     }
