@@ -4,7 +4,7 @@ import { handleError, handleSuccess } from '../../utils';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { clearMessages, SignupUser } from '../redux/slice/authSlice';
-import {GoogleOAuthProvider, useGoogleLogin} from "@react-oauth/google";
+import {GoogleOAuthProvider} from "@react-oauth/google";
 import GoogleComponent from './GoogleComponent';
 
 const Register = () => {
@@ -38,7 +38,7 @@ const Register = () => {
     dispatch(SignupUser(registerInfo));
   }
 
-
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   return (
     <>
@@ -92,9 +92,8 @@ const Register = () => {
             <div class="row">
               <div class="col-4">
                 <div class="d-grid">
-                  <button type="button" onClick={""} class="btn mt-2 btn-light-primary bg-light text-muted">
-                    {/* <img src="../src/assets/images/authentication/google.svg" alt="img" /> <span class="d-none d-sm-inline-block"> Google</span> */}
-                   <GoogleOAuthProvider clientId="752032708839-0ld3ft7t6a5pks96m22v1m84hegro8i0.apps.googleusercontent.com">
+                  <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
+                   <GoogleOAuthProvider clientId={googleClientId}>
                     <GoogleComponent/>
                     </GoogleOAuthProvider> 
                   </button>

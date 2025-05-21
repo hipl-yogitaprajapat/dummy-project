@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearMessages, LogoutUser } from './redux/slice/authSlice';
 // import {} from "../assets/images/user/avatar-2.jpg"
 
-const Header = () => {
+const Header = ({ onToggleSidebar }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const Header = () => {
     {/* <!-- ======= Menu collapse Icon ===== --> */}
     <li class="pc-h-item pc-sidebar-collapse">
       <a href="#" class="pc-head-link ms-0" id="sidebar-hide">
-        <i class="ti ti-menu-2"></i>
+        <i onClick={onToggleSidebar} class="ti ti-menu-2"></i>
       </a>
     </li>
     <li class="pc-h-item pc-sidebar-popup">

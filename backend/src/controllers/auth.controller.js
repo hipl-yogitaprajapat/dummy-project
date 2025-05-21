@@ -3,8 +3,8 @@ import { generateToken } from "../lib/utils.js"
 import User from "../models/user.model.js"
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken"
-import { Query } from "mongoose";
 import { oauth2client } from "../lib/googleConfig.js";
+import axios from "axios";
 export const signup = async (req, res) => {
     const { firstName, lastName, company, email, password } = req.body;
     try {
@@ -211,11 +211,9 @@ export const logout = (req, res) => {
     
     const googleRes = await oauth2client.getToken(code);
     oauth2client.setCredentials(googleRes.tokens)
-    const userRes = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`)
-    console.log(userRes,"userRes");
-    
+    const userRes = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`)    
     const {email,name} = userRes.data;
-    const user = await User.findOne({email});
+    let user = await User.findOne({email});
     if(!user){
         user = await User.create({
             name,
@@ -229,6 +227,7 @@ export const logout = (req, res) => {
    return res.status(200).json({message:"Google login successfully",success: true,user,token })
 
 } catch (error) {
+    console.log(error,"error");
         res.status(500).json({ message: "Internal server error" })
 }
     }

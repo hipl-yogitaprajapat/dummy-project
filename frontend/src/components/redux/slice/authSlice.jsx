@@ -9,13 +9,13 @@ const initialState = {
     success: null,
     token: null
 }
+const url = import.meta.env.VITE_APP_API_URL;
 
 
 export const SignupUser = createAsyncThunk("signup", async (registerInfo, { rejectWithValue }) => {
 
     try {
-        const url = "http://localhost:5001/api/auth/signup"
-        const response = await fetch(url, {
+        const response = await fetch(url + "signup", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -34,8 +34,7 @@ export const SignupUser = createAsyncThunk("signup", async (registerInfo, { reje
 
 export const LoginUser = createAsyncThunk("login", async (loginInfo, { rejectWithValue }) => {
     try {
-        const url = "http://localhost:5001/api/auth/login";
-        const response = await fetch(url, {
+        const response = await fetch(url + "login", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -54,8 +53,7 @@ export const LoginUser = createAsyncThunk("login", async (loginInfo, { rejectWit
 
 export const LogoutUser = createAsyncThunk("logout", async (_, { errorMsg }) => {
     try {
-        const url = "http://localhost:5001/api/auth/logout";
-        const response = await fetch(url, {
+        const response = await fetch(url + "logout", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -110,12 +108,24 @@ export const ResetPasswordUser = createAsyncThunk("resetpassword", async ({ inpu
 })
 
 
-const api = axios.create({
-    baseURL: "http://localhost:5001/api/auth/",
-    // withCredentials: true,
-});
-
-export const googleAuth = (code) => api.get(`/google?code=${code}`);
+export const googleAuth = createAsyncThunk("googleAuth", async (code, { rejectWithValue }) => {
+    try {
+        const url = `http://localhost:5001/api/auth/google?code=${code}`;
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        const result = await response.json();        
+       if (!response.ok) {
+            return rejectWithValue(result.message);
+        }
+        return result;
+    } catch (error) {
+         return rejectWithValue(error.message || "Something went wrong");
+    }
+})
 
 const authSlice = createSlice({
     name: "auth",
@@ -219,8 +229,31 @@ const authSlice = createSlice({
             state.error = action.payload;
             state.success = false;
         });
+        builder.addCase(googleAuth.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+            state.success = false;
+
+        })
+        builder.addCase(googleAuth.fulfilled, (state, action) => {
+            state.loading = false;
+            state.success = true;
+            state.message = action.payload.message;
+            state.name = action.payload.name;
+            state.token = action.payload.token;
+            localStorage.setItem('token', action.payload.token);
+            localStorage.setItem('loggedInUser', action.payload.user.name);
+        })
+        builder.addCase(googleAuth.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+            state.success = false;
+        });
     }
 })
 
 export const { clearMessages } = authSlice.actions;
 export default authSlice.reducer;
+
+
+

@@ -4,6 +4,8 @@ import { ToastContainer } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import { clearMessages, LoginUser } from '../redux/slice/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import GoogleComponent from './GoogleComponent';
 
 const Login = () => {
   const [loginInfo,setLoginInfo]= useState({
@@ -34,8 +36,10 @@ const Login = () => {
         return handleError("All fields are required")
     }
         dispatch(LoginUser(loginInfo));
-    
   }
+
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 
   return (
    <>
@@ -78,7 +82,9 @@ const Login = () => {
               <div class="col-4">
                 <div class="d-grid">
                   <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="../src/assets/images/authentication/google.svg" alt="img"/> <span class="d-none d-sm-inline-block"> Google</span>
+                    <GoogleOAuthProvider clientId={googleClientId}>
+                    <GoogleComponent/>
+                    </GoogleOAuthProvider> 
                   </button>
                 </div>
               </div>

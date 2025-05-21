@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Sidebar = () => {
+const Sidebar = ({isVisible}) => {
   return (
       <>
        {/* <!-- [ Sidebar Menu ] start --> */}
-    <nav class="pc-sidebar overflow-scroll">
+    <nav className={`pc-sidebar pc-trigger overflow-scroll ${isVisible ? '' : 'pc-sidebar-hide'}`}>
   <div class="navbar-wrapper">
     <div class="m-header">
       <Link to="/dashboard" class="b-brand text-primary">
@@ -44,24 +44,6 @@ const Sidebar = () => {
             <span class="pc-mtext">Icons</span>
           </Link>
         </li>
-
-        <li class="pc-item pc-caption">
-          <label>Pages</label>
-          <i class="ti ti-news"></i>
-        </li>
-        <li class="pc-item">
-          <Link to="/login" class="pc-link">
-            <span class="pc-micon"><i class="ti ti-lock"></i></span>
-            <span class="pc-mtext">Login</span>
-          </Link>
-        </li>
-        <li class="pc-item">
-          <Link to="/register" class="pc-link">
-            <span class="pc-micon"><i class="ti ti-user-plus"></i></span>
-            <span class="pc-mtext">Register</span>
-          </Link>
-        </li>
-
         <li class="pc-item pc-caption">
           <label>Other</label>
           <i class="ti ti-brand-chrome"></i>
