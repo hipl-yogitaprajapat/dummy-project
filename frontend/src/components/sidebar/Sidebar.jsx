@@ -26,6 +26,18 @@ const Sidebar = ({isVisible}) => {
           <label>UI Components</label>
           <i class="ti ti-dashboard"></i>
         </li>
+          <li class="pc-item">
+          <Link to="/client-project" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-typography"></i></span>
+            <span class="pc-mtext">New Project</span>
+          </Link>
+        </li>
+          <li class="pc-item">
+          <Link to="/client-issue" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-typography"></i></span>
+            <span class="pc-mtext">Isuue</span>
+          </Link>
+        </li>
         <li class="pc-item">
           <Link to="/typography" class="pc-link">
             <span class="pc-micon"><i class="ti ti-typography"></i></span>

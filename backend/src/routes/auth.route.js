@@ -14,7 +14,4 @@ router.get("/check",protectRoute,checkAuth)
 router.put("/update-profile", protectRoute,upload.single("image"), updateProfile);
 router.get("/google",googleLogin)
 router.get("/view-profile",protectRoute,viewProfile)
-
-
-
 export default router

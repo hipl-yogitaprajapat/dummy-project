@@ -3,7 +3,6 @@ import React from 'react'
 const Footer = () => {
   return (
     <>
-    <div>Footer</div>
     <footer class="pc-footer">
     <div class="footer-wrapper container-fluid">
       <div class="row">

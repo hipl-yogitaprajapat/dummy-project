@@ -43,6 +43,11 @@ import ForgetPassword from './components/sidebar/ForgetPassword'
 import ChangePassword from './components/sidebar/ChangePassword'
 import UpdateProfile from './components/sidebar/UpdateProfile'
 import ViewProfile from './components/sidebar/ViewProfile'
+import Client from './components/sidebar/Client'
+import Developer from './components/sidebar/Developer'
+import Tester from './components/sidebar/Tester'
+import ClientIssue from './components/sidebar/client/ClientIssue'
+import ClientProject from './components/sidebar/client/ClientProject'
 
 const Routers = () => {
      const [isAuthenticated, setIsAuthenticated] = useState(false);     
@@ -56,13 +61,18 @@ const Routers = () => {
       <ProtectedRoute setIsAuthenticated={setIsAuthenticated} />
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/dashboard"  element={<PrivateRoute element={<Dashboard />} />}  />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/dashboard/update-profile"  element={<UpdateProfile />} />
       <Route path="/dashboard/view-profile"  element={<ViewProfile />} />
       <Route path="/analytics" element={<Analytics />} />
-      <Route path="/typography"  element={<PrivateRoute element={<Typography />} />}  />
-      <Route path="/color"  element={<PrivateRoute element={<Color />} />}  />
-      <Route path="/icons"  element={<PrivateRoute element={<Icons />} />}  />
+      <Route path="/developer"  element={<PrivateRoute element={<Developer />} />}  />
+      <Route path="/client"  element={<PrivateRoute element={<Client />} />}  />
+      <Route path="/tester"  element={<PrivateRoute element={<Tester />} />}  />
+      <Route path="/client-issue"  element={<PrivateRoute element={<ClientIssue />} />}  />
+      <Route path="/client-project"  element={<PrivateRoute element={<ClientProject />} />}  />
+      <Route path="/typography" element={<Typography />} />
+      <Route path="/color" element={<Color />} />
+      <Route path="/icons" element={<Icons />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forget-password" element={<ForgetPassword />} />

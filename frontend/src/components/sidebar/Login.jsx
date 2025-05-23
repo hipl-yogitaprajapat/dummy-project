@@ -23,14 +23,13 @@ const Login = () => {
         dispatch(clearMessages());
         const role = localStorage.getItem("role");
         console.log(role,"role");
-        
         setTimeout(() => {
           if(role === "client"){
-          navigate("/color")
+          navigate("/client")
           }else if(role === "developer"){
-          navigate("/typography")
+          navigate("/developer")
           }else{
-            navigate("/icons")
+            navigate("/tester")
           }
       }, 1000);
       }

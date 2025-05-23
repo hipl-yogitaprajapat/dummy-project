@@ -610,10 +610,10 @@ const Header = ({ onToggleSidebar }) => {
               <i class="ti ti-wallet"></i>
               <span>Billing</span>
             </a>
-            <a href="#!" class="dropdown-item">
+            <button type='button' onClick={handleLogout} class="dropdown-item">
               <i class="ti ti-power"></i>
               <span>Logout</span>
-            </a>
+            </button>
           </div>
           <div class="tab-pane fade" id="drp-tab-2" role="tabpanel" aria-labelledby="drp-t2" tabIndex="0">
             <a href="#!" class="dropdown-item">

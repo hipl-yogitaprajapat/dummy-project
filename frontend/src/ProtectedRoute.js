@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 function ProtectedRoute({ setIsAuthenticated }) {
     const location = useLocation();
     const navigate = useNavigate();
+    const role = localStorage.getItem("role");
 
     useEffect(() => {
         if (localStorage.getItem('token')) {
@@ -12,7 +13,15 @@ function ProtectedRoute({ setIsAuthenticated }) {
                 location.pathname === '/login' ||
                 location.pathname === '/register'
             ) {
-                navigate('/dashboard', { replace: false });
+                // navigate('/dashboard', { replace: false });
+                if (role === 'client') {
+                    navigate('/client', { replace: false });
+                } else if (role === 'developer') {
+                    navigate('/developer', { replace: false });
+                } else {
+                    navigate('/tester', { replace: false });
+                }
+
             }
         }
     }, [location, navigate, setIsAuthenticated])

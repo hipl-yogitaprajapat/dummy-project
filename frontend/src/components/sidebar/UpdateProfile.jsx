@@ -13,14 +13,6 @@ const UpdateProfile = () => {
     company: '',
     password: '',
     image:"",
-
-
-
-
-
-
-
-    
     preview: ''
   })
   console.log(updateInfo, "updateInfo");

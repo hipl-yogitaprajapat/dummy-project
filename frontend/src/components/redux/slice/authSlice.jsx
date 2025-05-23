@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
 
 const initialState = {
     message: "",
@@ -16,7 +15,7 @@ const url = import.meta.env.VITE_APP_API_URL;
 export const SignupUser = createAsyncThunk("signup", async (registerInfo, { rejectWithValue }) => {
 
     try {
-        const response = await fetch(url + "signup", {
+        const response = await fetch(url + "auth/signup", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -36,7 +35,7 @@ export const SignupUser = createAsyncThunk("signup", async (registerInfo, { reje
 
 export const LoginUser = createAsyncThunk("login", async (loginInfo, { rejectWithValue }) => {
     try {
-        const response = await fetch(url + "login", {
+        const response = await fetch(url + "auth/login", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -56,7 +55,7 @@ export const LoginUser = createAsyncThunk("login", async (loginInfo, { rejectWit
 
 export const LogoutUser = createAsyncThunk("logout", async (_, { errorMsg }) => {
     try {
-        const response = await fetch(url + "logout", {
+        const response = await fetch(url + "auth/logout", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -143,7 +142,7 @@ export const UpdateUserProfile = createAsyncThunk("updateprofile", async (update
       if (updateInfo.image) {
         formData.append("image", updateInfo.image);
       }
-        const response = await fetch(url + "update-profile", {
+        const response = await fetch(url + "auth/update-profile", {
             method: "PUT",
              credentials: 'include', 
             body:formData
@@ -162,7 +161,7 @@ export const UpdateUserProfile = createAsyncThunk("updateprofile", async (update
 
 export const viewProfile = createAsyncThunk("viewprofile", async (_, { rejectWithValue }) => {
   try {
-    const response = await fetch(url + "view-profile", {
+    const response = await fetch(url + "auth/view-profile", {
       method: 'GET',
       credentials: 'include',
     });
@@ -243,7 +242,7 @@ const authSlice = createSlice({
             state.token = action.payload.jwtToken;
             localStorage.removeItem("token");
             localStorage.removeItem("loggedInUser");
-
+            localStorage.removeItem("role");
         })
         builder.addCase(LogoutUser.rejected, (state, action) => {
             state.loading = true
