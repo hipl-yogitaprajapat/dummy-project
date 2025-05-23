@@ -21,6 +21,14 @@ const userSchema = new mongoose.Schema(
         password:{
             type:String,
         },
+          image:{
+            type:String,
+        },
+         role:{
+            type:String,
+            enum:["client","developer","tester"],
+            default:"client"
+        },
     },
     { timestamps: true },
 ) 

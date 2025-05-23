@@ -7,7 +7,8 @@ const initialState = {
     loading: false,
     error: null,
     success: null,
-    token: null
+    token: null,
+    profile:null,
 }
 const url = import.meta.env.VITE_APP_API_URL;
 
@@ -20,6 +21,7 @@ export const SignupUser = createAsyncThunk("signup", async (registerInfo, { reje
             headers: {
                 'Content-Type': 'application/json'
             },
+             credentials: 'include', 
             body: JSON.stringify(registerInfo)
         })
         const result = await response.json();
@@ -39,6 +41,7 @@ export const LoginUser = createAsyncThunk("login", async (loginInfo, { rejectWit
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'include', 
             body: JSON.stringify(loginInfo)
         })
         const result = await response.json();
@@ -127,6 +130,56 @@ export const googleAuth = createAsyncThunk("googleAuth", async (code, { rejectWi
     }
 })
 
+export const UpdateUserProfile = createAsyncThunk("updateprofile", async (updateInfo, { rejectWithValue }) => {
+    console.log(updateInfo,"updateInfooooo");
+    
+
+    try {
+          const formData = new FormData();
+      formData.append("firstName", updateInfo.firstName);
+      formData.append("lastName", updateInfo.lastName);
+      formData.append("company", updateInfo.company);
+      formData.append("password", updateInfo.password);
+      if (updateInfo.image) {
+        formData.append("image", updateInfo.image);
+      }
+        const response = await fetch(url + "update-profile", {
+            method: "PUT",
+             credentials: 'include', 
+            body:formData
+        })
+        console.log(response,"responseeee");
+        
+        const result = await response.json();
+           if (!response.ok) {
+            return rejectWithValue(result.message);
+        }
+        return result
+    } catch (error) {
+        return rejectWithValue(error.message || "Something went wrong");
+    }
+})
+
+export const viewProfile = createAsyncThunk("viewprofile", async (_, { rejectWithValue }) => {
+  try {
+    const response = await fetch(url + "view-profile", {
+      method: 'GET',
+      credentials: 'include',
+    });
+     console.log(response,"res");
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      return rejectWithValue(result.message);
+    }
+
+    return result.user;
+  } catch (err) {
+    return rejectWithValue(err.message || "Failed to load profile");
+  }
+});
+
 const authSlice = createSlice({
     name: "auth",
     initialState,
@@ -169,7 +222,7 @@ const authSlice = createSlice({
             state.token = action.payload.jwtToken;
             localStorage.setItem('token', action.payload.jwtToken);
             localStorage.setItem('loggedInUser', action.payload.name);
-
+            localStorage.setItem('role', action.payload.role);
         })
         builder.addCase(LoginUser.rejected, (state, action) => {
             state.loading = true
@@ -249,6 +302,38 @@ const authSlice = createSlice({
             state.error = action.payload;
             state.success = false;
         });
+           builder.addCase(UpdateUserProfile.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+            state.success = null;
+
+        })
+        builder.addCase(UpdateUserProfile.fulfilled, (state, action) => {            
+            state.loading = false;
+            state.success = true;
+            state.message = action.payload.message;
+        })
+        builder.addCase(UpdateUserProfile.rejected, (state, action) => {
+            state.loading = true
+            state.error = action.payload;
+
+        })
+            builder.addCase(viewProfile.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+            state.success = null;
+
+        })
+        builder.addCase(viewProfile.fulfilled, (state, action) => {            
+            state.loading = false;
+            state.success = true;
+            state.profile = action.payload;
+            state.message = action.payload.message;
+        })
+        builder.addCase(viewProfile.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload;
+        })
     }
 })
 

@@ -4,7 +4,7 @@ import { handleError, handleSuccess } from '../../utils';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { clearMessages, SignupUser } from '../redux/slice/authSlice';
-import {GoogleOAuthProvider} from "@react-oauth/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleComponent from './GoogleComponent';
 
 const Register = () => {
@@ -13,8 +13,9 @@ const Register = () => {
     lastName: '',
     company: '',
     email: '',
-    password: ''
-  })  
+    password: '',
+    role:""
+  })
 
   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -82,6 +83,21 @@ const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
               <label class="form-label">Password</label>
               <input type="password" class="form-control" name="password" value={registerInfo.password} onChange={(e) => setregisterInfo({ ...registerInfo, password: e.target.value })} placeholder="Password" />
             </div>
+                  <div class="form-group mb-3">
+                    <label class="form-label">Role</label>
+                    {/* <input type="password" class="form-control" name="password" value={registerInfo.password} onChange={(e) => setregisterInfo({ ...registerInfo, password: e.target.value })} placeholder="Password" /> */}
+                    <select
+                      className="form-control"
+                      value={registerInfo.role}
+                      onChange={(e) => setregisterInfo({ ...registerInfo, role: e.target.value })}
+                      required
+                    >
+                      <option>-- Select Role --</option>
+                      <option value="tester">Tester</option>
+                      <option value="client">Client</option>
+                      <option value="developer">Developer</option>
+                    </select>
+            </div>
             <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#" class="text-primary"> Terms of Service </a> and <a href="#" class="text-primary"> Privacy Policy</a></p>
             <div class="d-grid mt-3">
               <button type="submit" class="btn btn-primary">Create Account</button>
@@ -95,7 +111,7 @@ const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
                   <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
                    <GoogleOAuthProvider clientId={googleClientId}>
                     <GoogleComponent/>
-                    </GoogleOAuthProvider> 
+                    </GoogleOAuthProvider>
                   </button>
                 </div>
               </div>

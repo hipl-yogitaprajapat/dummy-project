@@ -5,8 +5,9 @@ import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken"
 import { oauth2client } from "../lib/googleConfig.js";
 import axios from "axios";
+import fs from "fs";
 export const signup = async (req, res) => {
-    const { firstName, lastName, company, email, password } = req.body;
+    const { firstName, lastName, company, email, password,role } = req.body;
     try {
         if (!firstName || !lastName || !company || !email || !password) {
             return res.status(400).json({ message: "All fields are required", success: false })
@@ -26,6 +27,7 @@ export const signup = async (req, res) => {
             lastName,
             company,
             email,
+            role,
             password: hashPassword
         })
         // console.log(newUser,"newUser");
@@ -58,7 +60,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
-        // console.log(user,"user");
+        console.log(user,"user");
 
         if (!user) {
             res.status(400).json({ message: "Invaild Credentials", success: false })
@@ -69,7 +71,7 @@ export const login = async (req, res) => {
         if (!isPasswordCorrect) {
             res.status(400).json({ message: "Invaild Credentials", success: false })
         }
-        const jwtToken = generateToken(user._id, res);
+        const jwtToken = generateToken(user._id,user.role, res);
 
         res.status(200).json({
             // _id: user._id,
@@ -80,7 +82,8 @@ export const login = async (req, res) => {
             message: "Login successfully",
             success: true,
             jwtToken,
-            name: user.firstName
+            name: user.firstName,
+            role: user.role,
         })
 
     } catch (error) {
@@ -194,7 +197,7 @@ export const logout = (req, res) => {
         }
     }
 
-    export const checkAuth = (req, res) => {
+export const checkAuth = (req, res) => {
         try {
             res.status(200).json(req.user)
         } catch (error) {
@@ -204,7 +207,7 @@ export const logout = (req, res) => {
         }
     }
 
-    export const googleLogin = async(req,res)=>{
+export const googleLogin = async(req,res)=>{
     try {
     const {code} = req.query;
     console.log(code,"code");
@@ -231,3 +234,76 @@ export const logout = (req, res) => {
         res.status(500).json({ message: "Internal server error" })
 }
     }
+
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user._id;    
+    const { firstName, lastName, company, password } = req.body;
+     if (!firstName || !lastName || !company || !password || !req.file) {
+            return res.status(400).json({ message: "All fields are required", success: false })
+        }
+
+    const user = await User.findById(userId);    
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found", success: false });
+    }
+
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (company) user.company = company;
+
+
+    if (password) {
+      if (password.length < 6) {
+        return res.status(400).json({ message: "Password must be at least 6 characters", success: false });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    if (req.file) {  
+        console.log(req.file,"img");
+              
+      if (user.image && fs.existsSync(`uploads/${user.image}`)) {
+        fs.unlinkSync(`uploads/${user.image}`);
+      }
+      user.image = req.file.filename;
+    }
+
+    await user.save();
+
+    return res.status(200).json({ message: "Profile updated successfully", success: true });
+  } catch (error) {
+    console.error("Error updating profile:", error.message);
+    return res.status(500).json({ message: "Internal server error", success: false });
+  }
+};
+
+export const viewProfile = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found", success: false });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        company: user.company,
+        image: user.image,
+        email: user.email
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching profile:", error.message);
+    return res.status(500).json({ message: "Internal server error", success: false });
+  }
+};

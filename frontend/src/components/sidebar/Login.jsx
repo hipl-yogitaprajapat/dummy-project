@@ -21,7 +21,18 @@ const Login = () => {
       if (success) {        
         handleSuccess(message);
         dispatch(clearMessages());
-        setTimeout(() => navigate("/dashboard"), 1000);
+        const role = localStorage.getItem("role");
+        console.log(role,"role");
+        
+        setTimeout(() => {
+          if(role === "client"){
+          navigate("/color")
+          }else if(role === "developer"){
+          navigate("/typography")
+          }else{
+            navigate("/icons")
+          }
+      }, 1000);
       }
       if (error) {
         handleError(error);
